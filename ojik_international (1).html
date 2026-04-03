@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>오직 인터내셔널 / Ohzic International</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --dark:#0f0a1e;--mid:#1a1232;--accent:#7c3aed;--accent-light:#a78bfa;
+      --accent2:#f59e0b;--white:#fff;--text-muted:#7a6fa6;--border:rgba(124,58,237,0.25);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--white);font-size:16px;line-height:1.7}
+    .ko{font-family:'Noto Sans KR',sans-serif}
+
+    .lang-toggle{display:flex;gap:4px}
+    .lang-btn{background:none;border:1px solid var(--border);color:rgba(255,255,255,0.5);padding:4px 10px;font-size:0.75rem;cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+    .lang-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 5%;background:rgba(15,10,30,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .logo{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--accent-light);letter-spacing:0.04em}
+    .logo .ko-name{font-family:'Noto Sans KR',sans-serif;font-size:0.95rem;opacity:0.75}
+    .nav-right{display:flex;align-items:center;gap:2rem}
+    nav ul{list-style:none;display:flex;gap:2rem}
+    nav ul li a{text-decoration:none;color:rgba(255,255,255,0.7);font-size:0.85rem;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.25s}
+    nav ul li a:hover{color:var(--accent-light)}
+    .parent-badge{font-size:0.7rem;letter-spacing:0.12em;color:rgba(255,255,255,0.3);text-transform:uppercase;border:1px solid rgba(255,255,255,0.1);padding:3px 8px}
+
+    .hero{min-height:100vh;display:flex;align-items:center;padding:8rem 5% 5rem;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(124,58,237,0.12) 0%,transparent 60%)}
+    .hero::after{content:'';position:absolute;top:20%;right:5%;width:300px;height:300px;border-radius:50%;background:rgba(245,158,11,0.04);pointer-events:none}
+    .hero-inner{max-width:700px;position:relative}
+    .hero-eyebrow{font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-light);font-weight:500;margin-bottom:1.5rem}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,4.8rem);line-height:1.1;margin-bottom:1.8rem}
+    .hero h1 em{font-style:normal;color:var(--accent-light)}
+    .hero h1 em.gold{color:var(--accent2)}
+    .hero p{font-size:1.05rem;color:rgba(255,255,255,0.68);max-width:540px;margin-bottom:2.5rem}
+    .btn-primary{display:inline-block;padding:0.9rem 2.2rem;background:var(--accent);color:#fff;text-decoration:none;font-weight:500;font-size:0.88rem;letter-spacing:0.06em;text-transform:uppercase;transition:background 0.25s,transform 0.2s}
+    .btn-primary:hover{background:var(--accent-light);transform:translateY(-2px)}
+    .btn-outline{display:inline-block;padding:0.9rem 2.2rem;border:1px solid var(--accent);color:var(--accent-light);text-decoration:none;font-weight:500;font-size:0.88rem;letter-spacing:0.06em;text-transform:uppercase;margin-left:1rem;transition:background 0.25s,color 0.25s}
+    .btn-outline:hover{background:var(--accent);color:#fff}
+
+    section{padding:6rem 5%}
+    .section-label{font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent-light);font-weight:500;margin-bottom:1rem}
+    .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);line-height:1.2;margin-bottom:1.5rem}
+    .divider{width:48px;height:2px;background:var(--accent);margin-bottom:2.5rem}
+
+    #about{background:var(--mid)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+    .about-text p{color:rgba(255,255,255,0.72);margin-bottom:1.2rem;font-size:1rem}
+    .platform-list{margin-top:1.5rem;display:flex;flex-direction:column;gap:0.8rem}
+    .platform-item{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.1rem;border:1px solid var(--border);background:rgba(124,58,237,0.04)}
+    .platform-item .p-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0}
+    .platform-item .p-text{font-size:0.88rem;color:rgba(255,255,255,0.75)}
+
+    #categories{background:var(--dark)}
+    .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-top:1rem}
+    .cat-card{padding:2.2rem;border:1px solid var(--border);background:rgba(15,10,30,0.5);transition:border-color 0.25s,transform 0.25s;position:relative;overflow:hidden}
+    .cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--accent),var(--accent-light))}
+    .cat-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+    .cat-icon{font-size:2rem;margin-bottom:1.2rem}
+    .cat-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:0.8rem}
+    .cat-card p{font-size:0.88rem;color:rgba(255,255,255,0.58);line-height:1.7}
+    .cat-tag{display:inline-block;margin-top:1rem;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-light);border:1px solid var(--border);padding:3px 10px}
+
+    #platforms{background:var(--mid)}
+    .plat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem}
+    .plat-card{padding:1.8rem;border:1px solid var(--border);background:rgba(124,58,237,0.04);text-align:center}
+    .plat-card .plat-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--accent-light);margin-bottom:0.5rem}
+    .plat-card .plat-desc{font-size:0.82rem;color:rgba(255,255,255,0.5)}
+
+    #contact{background:var(--dark)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem}
+    .contact-info p{color:rgba(255,255,255,0.65);margin-bottom:2rem}
+    .contact-item{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem}
+    .contact-item .icon{width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;color:var(--accent-light)}
+    .contact-item .detail .lbl{font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.2rem}
+    .contact-item .detail .val{font-size:0.95rem;color:var(--white)}
+    .contact-form{display:flex;flex-direction:column;gap:1rem}
+    .contact-form input,.contact-form textarea{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);padding:0.9rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.25s;resize:none}
+    .contact-form input::placeholder,.contact-form textarea::placeholder{color:rgba(255,255,255,0.25)}
+    .contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent)}
+
+    footer{padding:2.5rem 5%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .footer-parent{font-size:0.8rem;color:rgba(255,255,255,0.3)}
+    footer p{font-size:0.82rem;color:var(--text-muted)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .hero-inner>*{animation:fadeUp 0.7s ease both}
+    .hero-inner>*:nth-child(1){animation-delay:0.1s}
+    .hero-inner>*:nth-child(2){animation-delay:0.25s}
+    .hero-inner>*:nth-child(3){animation-delay:0.4s}
+    .hero-inner>*:nth-child(4){animation-delay:0.55s}
+
+    body.ko-mode [data-en]{display:none}
+    body.ko-mode [data-ko]{display:block}
+    body:not(.ko-mode) [data-ko]{display:none}
+    body:not(.ko-mode) [data-en]{display:block}
+    body.ko-mode span[data-en]{display:none}
+    body.ko-mode span[data-ko]{display:inline}
+    body:not(.ko-mode) span[data-ko]{display:none}
+    body:not(.ko-mode) span[data-en]{display:inline}
+
+    @media(max-width:768px){
+      nav ul{display:none}
+      .about-grid,.contact-grid{grid-template-columns:1fr;gap:2rem}
+      .btn-outline{margin-left:0;margin-top:0.8rem;display:block;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;flex-direction:column;gap:3px">
+    <div class="logo"><span class="ko-name">오직 인터내셔널</span> · <span>Ohzic International</span></div>
+    <div class="parent-badge">A JND Corporation Company</div>
+  </div>
+  <div class="nav-right">
+    <ul>
+      <li><a href="#about"><span data-en>About</span><span data-ko class="ko">소개</span></a></li>
+      <li><a href="#categories"><span data-en>Products</span><span data-ko class="ko">제품</span></a></li>
+      <li><a href="#platforms"><span data-en>Platforms</span><span data-ko class="ko">플랫폼</span></a></li>
+      <li><a href="#contact"><span data-en>Contact</span><span data-ko class="ko">연락처</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ko')">KO</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span data-en>TCG · Character Merchandise · Global</span>
+      <span data-ko class="ko">TCG · 캐릭터 상품 · 글로벌</span>
+    </div>
+    <h1 data-en>The Cards &amp; Characters<br>You <em>Love</em>, <em class="gold">Delivered</em></h1>
+    <h1 data-ko class="ko">좋아하는 카드와 캐릭터,<br><em>전 세계로</em> <em class="gold">배송합니다</em></h1>
+    <p data-en>Ohzic International specializes in trading card games (TCG) and character merchandise — connecting enthusiast communities in Korea and around the world.</p>
+    <p data-ko class="ko">오직 인터내셔널은 트레이딩 카드 게임(TCG)과 캐릭터 관련 상품을 전문으로 합니다 — 한국과 전 세계의 마니아 커뮤니티를 연결합니다.</p>
+    <div>
+      <a href="#categories" class="btn-primary">
+        <span data-en>Our Products</span><span data-ko class="ko">제품 보기</span>
+      </a>
+      <a href="#contact" class="btn-outline">
+        <span data-en>Wholesale Inquiry</span><span data-ko class="ko">도매 문의</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-label"><span data-en>Who We Are</span><span data-ko class="ko">회사 소개</span></p>
+      <h2 class="section-title" data-en>Specialists in TCG &amp; character merchandise</h2>
+      <h2 class="section-title" data-ko class="ko">TCG &amp; 캐릭터 상품<br>전문 기업</h2>
+      <div class="divider"></div>
+      <p data-en>Ohzic International is the TCG and character merchandise division of JND Corporation, serving passionate communities across Korean domestic platforms and global markets.</p>
+      <p data-ko class="ko">오직 인터내셔널은 JND Corporation의 TCG 및 캐릭터 상품 전문 부문으로, 국내 플랫폼과 글로벌 시장에서 마니아 커뮤니티를 서비스합니다.</p>
+      <p data-en>We operate across multiple Korean e-commerce platforms — including Naver SmartStore, Coupang, 29CM, and more — as well as international wholesale channels, giving us the reach to serve buyers wherever they shop.</p>
+      <p data-ko class="ko">네이버 스마트스토어, 쿠팡, 29CM 등 다양한 국내 이커머스 플랫폼과 국제 도매 채널에서 운영하여, 고객이 쇼핑하는 어디서든 서비스를 제공합니다.</p>
+      <p data-en>With a deep love for the hobby and a strong supplier network, we bring authentic products to fans who demand quality and authenticity.</p>
+      <p data-ko class="ko">취미에 대한 깊은 열정과 강력한 공급업체 네트워크를 바탕으로, 품질과 정품을 요구하는 팬들에게 정품 제품을 제공합니다.</p>
+    </div>
+    <div>
+      <p class="section-label" style="margin-bottom:1.2rem"><span data-en>Sales Channels</span><span data-ko class="ko">판매 채널</span></p>
+      <div class="platform-list">
+        <div class="platform-item">
+          <div class="p-icon">🟢</div>
+          <div class="p-text" data-en>Naver SmartStore · 네이버 스마트스토어</div>
+          <div class="p-text ko" data-ko>네이버 스마트스토어</div>
+        </div>
+        <div class="platform-item">
+          <div class="p-icon">🟠</div>
+          <div class="p-text" data-en>Coupang Rocket Growth · 쿠팡 로켓그로스</div>
+          <div class="p-text ko" data-ko>쿠팡 로켓그로스</div>
+        </div>
+        <div class="platform-item">
+          <div class="p-icon">⚫</div>
+          <div class="p-text" data-en>29CM · Premium lifestyle platform</div>
+          <div class="p-text ko" data-ko>29CM · 프리미엄 라이프스타일 플랫폼</div>
+        </div>
+        <div class="platform-item">
+          <div class="p-icon">💛</div>
+          <div class="p-text" data-en>KakaoTalk Store · 카카오톡스토어</div>
+          <div class="p-text ko" data-ko>카카오톡스토어</div>
+        </div>
+        <div class="platform-item">
+          <div class="p-icon">🃏</div>
+          <div class="p-text" data-en>Kim's TCG Store · TCG specialist shop</div>
+          <div class="p-text ko" data-ko>Kim's TCG Store · TCG 전문 샵</div>
+          <a href="https://www.kimstcgstore.com" target="_blank" style="margin-left:auto;color:var(--accent-light);font-size:0.8rem;text-decoration:none;white-space:nowrap">Visit →</a>
+        </div>
+        <div class="platform-item">
+          <div class="p-icon">📸</div>
+          <div class="p-text" data-en>Instagram · @kimstcgstore</div>
+          <div class="p-text ko" data-ko>인스타그램 · @kimstcgstore</div>
+          <a href="https://www.instagram.com/kimstcgstore/" target="_blank" style="margin-left:auto;color:var(--accent-light);font-size:0.8rem;text-decoration:none;white-space:nowrap">Follow →</a>
+        </div>
+        <div class="platform-item">
+          <div class="p-icon">🌐</div>
+          <div class="p-text" data-en>International Wholesale · B2B Global</div>
+          <div class="p-text ko" data-ko>국제 도매 · B2B 글로벌</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <p class="section-label"><span data-en>What We Sell</span><span data-ko class="ko">취급 제품</span></p>
+  <h2 class="section-title" data-en>Products for every collector</h2>
+  <h2 class="section-title" data-ko class="ko">모든 컬렉터를 위한 제품</h2>
+  <div class="divider"></div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-icon">🃏</div>
+      <h3 data-en>Trading Card Games (TCG)</h3>
+      <h3 data-ko class="ko">트레이딩 카드 게임 (TCG)</h3>
+      <p data-en>Pokémon, One Piece, and more — booster packs, single cards, sealed products, and collector items. Authentic products, carefully sourced.</p>
+      <p data-ko class="ko">포켓몬, 원피스 등 — 부스터팩, 단품 카드, 봉인 제품, 컬렉터 아이템. 정품, 엄선된 소싱.</p>
+      <div class="cat-tag">TCG · Cards · Sealed</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">🎭</div>
+      <h3 data-en>Character Merchandise</h3>
+      <h3 data-ko class="ko">캐릭터 관련 상품</h3>
+      <p data-en>Figures, plush toys, stationery, accessories, and lifestyle products featuring beloved characters — for fans and collectors alike.</p>
+      <p data-ko class="ko">인기 캐릭터 피규어, 봉제인형, 문구, 액세서리, 라이프스타일 제품 — 팬과 컬렉터 모두를 위한.</p>
+      <div class="cat-tag">Figures · Plush · Lifestyle</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-icon">📦</div>
+      <h3 data-en>B2B Wholesale Supply</h3>
+      <h3 data-ko class="ko">B2B 도매 공급</h3>
+      <p data-en>International wholesale orders for retailers, resellers, and distributors seeking authentic Korean-sourced TCG and character products at competitive prices.</p>
+      <p data-ko class="ko">정품 한국 소싱 TCG 및 캐릭터 제품을 경쟁력 있는 가격으로 찾는 소매업체, 리셀러, 유통업체를 위한 국제 도매 주문.</p>
+      <div class="cat-tag">Wholesale · International · B2B</div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section id="platforms">
+  <p class="section-label" style="text-align:center"><span data-en>Where to Find Us</span><span data-ko class="ko">구매처</span></p>
+  <h2 class="section-title" style="text-align:center" data-en>Shop on your favorite platform</h2>
+  <h2 class="section-title" style="text-align:center" data-ko class="ko">원하는 플랫폼에서 쇼핑하세요</h2>
+  <div class="divider" style="margin:0 auto 2.5rem"></div>
+  <div class="plat-grid">
+    <div class="plat-card">
+      <div class="plat-name">스마트스토어</div>
+      <div class="plat-desc" data-en>Naver SmartStore<br>Domestic retail</div>
+      <div class="plat-desc ko" data-ko>네이버 스마트스토어<br>국내 소매</div>
+    </div>
+    <div class="plat-card">
+      <div class="plat-name">쿠팡</div>
+      <div class="plat-desc" data-en>Coupang Rocket Growth<br>Fast delivery</div>
+      <div class="plat-desc ko" data-ko>쿠팡 로켓그로스<br>빠른 배송</div>
+    </div>
+    <div class="plat-card">
+      <div class="plat-name">29CM</div>
+      <div class="plat-desc" data-en>Premium lifestyle<br>Curated selection</div>
+      <div class="plat-desc ko" data-ko>프리미엄 라이프스타일<br>큐레이션 셀렉션</div>
+    </div>
+    <div class="plat-card">
+      <div class="plat-name">카카오</div>
+      <div class="plat-desc" data-en>KakaoTalk Store<br>Mobile commerce</div>
+      <div class="plat-desc ko" data-ko>카카오톡스토어<br>모바일 커머스</div>
+    </div>
+    <div class="plat-card">
+      <div class="plat-name">🌐 Global</div>
+      <div class="plat-desc" data-en>International wholesale<br>B2B inquiries welcome</div>
+      <div class="plat-desc ko" data-ko>국제 도매<br>B2B 문의 환영</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="section-label"><span data-en>Contact</span><span data-ko class="ko">연락처</span></p>
+      <h2 class="section-title" data-en>Find the cards &amp;<br>characters you need</h2>
+      <h2 class="section-title" data-ko class="ko">필요한 카드와 캐릭터를<br>찾아드립니다</h2>
+      <div class="divider"></div>
+      <p data-en>Wholesale buyer, international reseller, or individual collector — we're here to help. Reach out and our team will get back to you promptly.</p>
+      <p data-ko class="ko">도매 바이어, 국제 리셀러, 개인 컬렉터 모두 환영합니다. 문의주시면 빠르게 답변드리겠습니다.</p>
+      <div class="contact-item">
+        <div class="icon">👤</div>
+        <div class="detail">
+          <div class="lbl">CEO</div>
+          <div class="val">Jaeyeon Oh · 오제연</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">✉</div>
+        <div class="detail">
+          <div class="lbl">Email</div>
+          <div class="val">info@jndcorporation.com</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">🃏</div>
+        <div class="detail">
+          <div class="lbl">TCG Store</div>
+          <div class="val"><a href="https://www.kimstcgstore.com" target="_blank" style="color:var(--accent-light);text-decoration:none">www.kimstcgstore.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">📸</div>
+        <div class="detail">
+          <div class="lbl">Instagram</div>
+          <div class="val"><a href="https://www.instagram.com/kimstcgstore/" target="_blank" style="color:var(--accent-light);text-decoration:none">@kimstcgstore</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">📍</div>
+        <div class="detail">
+          <div class="lbl"><span data-en>Location</span><span data-ko class="ko">위치</span></div>
+          <div class="val"><span data-en>501-1 ho, 5th floor, 112, LS-ro, Dongan-gu, Anyang-si, Gyeonggi-do, Republic of Korea</span><span data-ko class="ko">경기도 안양시 동안구 LS로 112, 5층 501-1호</span></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">🏢</div>
+        <div class="detail">
+          <div class="lbl"><span data-en>Parent Company</span><span data-ko class="ko">모회사</span></div>
+          <div class="val">JND Corporation</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="contact-form">
+        <input type="text" data-en-placeholder="Your Name" data-ko-placeholder="이름" placeholder="Your Name"/>
+        <input type="email" data-en-placeholder="Email Address" data-ko-placeholder="이메일 주소" placeholder="Email Address"/>
+        <input type="text" data-en-placeholder="Company / Country" data-ko-placeholder="회사명 / 국가" placeholder="Company / Country"/>
+        <input type="text" data-en-placeholder="Interested in: (TCG / Character goods / Wholesale)" data-ko-placeholder="관심 분야: (TCG / 캐릭터 상품 / 도매)" placeholder="Interested in: (TCG / Character goods / Wholesale)"/>
+        <textarea rows="4" data-en-placeholder="Tell us what you're looking for…" data-ko-placeholder="찾고 계신 내용을 알려주세요…" placeholder="Tell us what you're looking for…"></textarea>
+        <button class="btn-primary" style="border:none;cursor:pointer;text-align:center">
+          <span data-en>Send Inquiry</span><span data-ko class="ko">문의 보내기</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="logo" style="font-size:1rem"><span class="ko-name">오직 인터내셔널</span> · Ohzic International</div>
+    <div class="footer-parent">A JND Corporation Company</div>
+  </div>
+  <p>© 2026 오직 인터내셔널 / Ohzic International. All rights reserved.</p>
+  <nav><ul style="list-style:none;display:flex;gap:1.5rem">
+    <li><a href="#about" style="text-decoration:none;color:var(--text-muted);font-size:0.82rem"><span data-en>About</span><span data-ko class="ko">소개</span></a></li>
+    <li><a href="#categories" style="text-decoration:none;color:var(--text-muted);font-size:0.82rem"><span data-en>Products</span><span data-ko class="ko">제품</span></a></li>
+    <li><a href="#contact" style="text-decoration:none;color:var(--text-muted);font-size:0.82rem"><span data-en>Contact</span><span data-ko class="ko">연락처</span></a></li>
+  </ul></nav>
+</footer>
+
+<script>
+function setLang(lang){
+  document.body.classList.toggle('ko-mode',lang==='ko');
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(lang==='en'?'.lang-btn:first-child':'.lang-btn:last-child').classList.add('active');
+  document.querySelectorAll('[data-en-placeholder]').forEach(el=>{
+    el.placeholder=lang==='ko'?el.dataset.koPlaceholder:el.dataset.enPlaceholder;
+  });
+}
+</script>
+</body>
+</html>
